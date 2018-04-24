@@ -3,7 +3,7 @@ package pgconv
 import (
 	"database/sql"
 	"errors"
-	"github.com/kucjac/go-rest-sdk/dberrors"
+	"github.com/kucjac/uni-db"
 	"github.com/lib/pq"
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
@@ -15,7 +15,7 @@ func TestNewConverter(t *testing.T) {
 		converter = New()
 		So(converter, ShouldNotBeNil)
 		So(len(converter.errorMap), ShouldBeGreaterThan, 0)
-		So(converter, ShouldImplement, (*dberrors.Converter)(nil))
+		So(converter, ShouldImplement, (*unidb.Converter)(nil))
 	})
 }
 
@@ -24,34 +24,34 @@ func TestPGRecogniser(t *testing.T) {
 		var converter *PGConverter = New()
 
 		Convey("Having a list of typical postgres errors", func() {
-			postgresErrors := map[*pq.Error]dberrors.Error{
-				{Code: pq.ErrorCode("01000")}: dberrors.ErrWarning,
-				{Code: pq.ErrorCode("01007")}: dberrors.ErrWarning,
-				{Code: pq.ErrorCode("02000")}: dberrors.ErrNoResult,
-				{Code: pq.ErrorCode("P0002")}: dberrors.ErrNoResult,
-				{Code: pq.ErrorCode("08006")}: dberrors.ErrConnExc,
-				{Code: pq.ErrorCode("21000")}: dberrors.ErrCardinalityViolation,
-				{Code: pq.ErrorCode("22012")}: dberrors.ErrDataException,
-				{Code: pq.ErrorCode("23000")}: dberrors.ErrIntegrConstViolation,
-				{Code: pq.ErrorCode("23001")}: dberrors.ErrRestrictViolation,
-				{Code: pq.ErrorCode("23502")}: dberrors.ErrNotNullViolation,
-				{Code: pq.ErrorCode("23503")}: dberrors.ErrForeignKeyViolation,
-				{Code: pq.ErrorCode("23505")}: dberrors.ErrUniqueViolation,
-				{Code: pq.ErrorCode("23514")}: dberrors.ErrCheckViolation,
-				{Code: pq.ErrorCode("25001")}: dberrors.ErrInvalidTransState,
-				{Code: pq.ErrorCode("25004")}: dberrors.ErrInvalidTransState,
-				{Code: pq.ErrorCode("28000")}: dberrors.ErrInvalidAuthorization,
-				{Code: pq.ErrorCode("28P01")}: dberrors.ErrInvalidPassword,
-				{Code: pq.ErrorCode("2D000")}: dberrors.ErrInvalidTransTerm,
-				{Code: pq.ErrorCode("3F000")}: dberrors.ErrInvalidSchemaName,
-				{Code: pq.ErrorCode("40000")}: dberrors.ErrTransRollback,
-				{Code: pq.ErrorCode("42P06")}: dberrors.ErrInvalidSyntax,
-				{Code: pq.ErrorCode("42501")}: dberrors.ErrInsufficientPrivilege,
-				{Code: pq.ErrorCode("53100")}: dberrors.ErrInsufficientResources,
-				{Code: pq.ErrorCode("54011")}: dberrors.ErrProgramLimitExceeded,
-				{Code: pq.ErrorCode("58000")}: dberrors.ErrSystemError,
-				{Code: pq.ErrorCode("XX000")}: dberrors.ErrInternalError,
-				{Code: pq.ErrorCode("P0003")}: dberrors.ErrUnspecifiedError,
+			postgresErrors := map[*pq.Error]unidb.Error{
+				{Code: pq.ErrorCode("01000")}: unidb.ErrWarning,
+				{Code: pq.ErrorCode("01007")}: unidb.ErrWarning,
+				{Code: pq.ErrorCode("02000")}: unidb.ErrNoResult,
+				{Code: pq.ErrorCode("P0002")}: unidb.ErrNoResult,
+				{Code: pq.ErrorCode("08006")}: unidb.ErrConnExc,
+				{Code: pq.ErrorCode("21000")}: unidb.ErrCardinalityViolation,
+				{Code: pq.ErrorCode("22012")}: unidb.ErrDataException,
+				{Code: pq.ErrorCode("23000")}: unidb.ErrIntegrConstViolation,
+				{Code: pq.ErrorCode("23001")}: unidb.ErrRestrictViolation,
+				{Code: pq.ErrorCode("23502")}: unidb.ErrNotNullViolation,
+				{Code: pq.ErrorCode("23503")}: unidb.ErrForeignKeyViolation,
+				{Code: pq.ErrorCode("23505")}: unidb.ErrUniqueViolation,
+				{Code: pq.ErrorCode("23514")}: unidb.ErrCheckViolation,
+				{Code: pq.ErrorCode("25001")}: unidb.ErrInvalidTransState,
+				{Code: pq.ErrorCode("25004")}: unidb.ErrInvalidTransState,
+				{Code: pq.ErrorCode("28000")}: unidb.ErrInvalidAuthorization,
+				{Code: pq.ErrorCode("28P01")}: unidb.ErrInvalidPassword,
+				{Code: pq.ErrorCode("2D000")}: unidb.ErrInvalidTransTerm,
+				{Code: pq.ErrorCode("3F000")}: unidb.ErrInvalidSchemaName,
+				{Code: pq.ErrorCode("40000")}: unidb.ErrTransRollback,
+				{Code: pq.ErrorCode("42P06")}: unidb.ErrInvalidSyntax,
+				{Code: pq.ErrorCode("42501")}: unidb.ErrInsufficientPrivilege,
+				{Code: pq.ErrorCode("53100")}: unidb.ErrInsufficientResources,
+				{Code: pq.ErrorCode("54011")}: unidb.ErrProgramLimitExceeded,
+				{Code: pq.ErrorCode("58000")}: unidb.ErrSystemError,
+				{Code: pq.ErrorCode("XX000")}: unidb.ErrInternalError,
+				{Code: pq.ErrorCode("P0003")}: unidb.ErrUnspecifiedError,
 			}
 
 			Convey("For given postgres error, specific database error should return", func() {
@@ -64,16 +64,16 @@ func TestPGRecogniser(t *testing.T) {
 
 		Convey("When sql errors are returned, they are also converted into dberror", func() {
 			errNoResults := converter.Convert(sql.ErrNoRows)
-			So(errNoResults.Compare(dberrors.ErrNoResult), ShouldBeTrue)
+			So(errNoResults.Compare(unidb.ErrNoResult), ShouldBeTrue)
 
 			errTxDone := converter.Convert(sql.ErrTxDone)
-			So(errTxDone.Compare(dberrors.ErrTxDone), ShouldBeTrue)
+			So(errTxDone.Compare(unidb.ErrTxDone), ShouldBeTrue)
 		})
 
 		Convey("Having unknown error not of *pq.Error type forwards it", func() {
 
 			fwdErr := converter.Convert(errors.New("Forwarded"))
-			So(fwdErr.Compare(dberrors.ErrUnspecifiedError), ShouldBeTrue)
+			So(fwdErr.Compare(unidb.ErrUnspecifiedError), ShouldBeTrue)
 
 		})
 	})

@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"github.com/jinzhu/gorm"
-	"github.com/kucjac/go-rest-sdk/dberrors"
+	"github.com/kucjac/uni-db"
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
 )
@@ -32,7 +32,7 @@ func TestNewGormConverter(t *testing.T) {
 					for _, db := range gormSupported {
 						errorConverter, err = New(db)
 						So(err, ShouldBeNil)
-						So(errorConverter, ShouldImplement, (*dberrors.Converter)(nil))
+						So(errorConverter, ShouldImplement, (*unidb.Converter)(nil))
 					}
 				})
 
@@ -73,15 +73,15 @@ func TestGORMConverterConvert(t *testing.T) {
 					gorm.ErrInvalidSQL,
 					gorm.ErrUnaddressable,
 					gorm.ErrRecordNotFound,
-					dberrors.ErrCardinalityViolation.New(),
-					dberrors.ErrWarning.New(),
+					unidb.ErrCardinalityViolation.New(),
+					unidb.ErrWarning.New(),
 					errors.New("Some error"),
 					sql.ErrNoRows,
 				}
 
 				for _, err := range convertErrors {
 					converted := errorConverter.Convert(err)
-					So(converted, ShouldHaveSameTypeAs, &dberrors.Error{})
+					So(converted, ShouldHaveSameTypeAs, &unidb.Error{})
 				}
 			})
 

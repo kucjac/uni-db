@@ -1,41 +1,41 @@
 package sqliteconv
 
 import (
-	"github.com/kucjac/go-rest-sdk/dberrors"
+	"github.com/kucjac/uni-db"
 	"github.com/mattn/go-sqlite3"
 )
 
-var defaultSQLiteErrorMap map[interface{}]dberrors.Error = map[interface{}]dberrors.Error{
-	sqlite3.ErrWarning: dberrors.ErrWarning,
+var defaultSQLiteErrorMap map[interface{}]unidb.Error = map[interface{}]unidb.Error{
+	sqlite3.ErrWarning: unidb.ErrWarning,
 
-	sqlite3.ErrNotFound: dberrors.ErrNoResult,
+	sqlite3.ErrNotFound: unidb.ErrNoResult,
 
-	sqlite3.ErrCantOpen: dberrors.ErrConnExc,
-	sqlite3.ErrNotADB:   dberrors.ErrConnExc,
+	sqlite3.ErrCantOpen: unidb.ErrConnExc,
+	sqlite3.ErrNotADB:   unidb.ErrConnExc,
 
-	sqlite3.ErrMismatch: dberrors.ErrDataException,
+	sqlite3.ErrMismatch: unidb.ErrDataException,
 
-	sqlite3.ErrConstraint:           dberrors.ErrIntegrConstViolation,
-	sqlite3.ErrConstraintCheck:      dberrors.ErrCheckViolation,
-	sqlite3.ErrConstraintForeignKey: dberrors.ErrForeignKeyViolation,
-	sqlite3.ErrConstraintUnique:     dberrors.ErrUniqueViolation,
-	sqlite3.ErrConstraintNotNull:    dberrors.ErrNotNullViolation,
-	sqlite3.ErrConstraintPrimaryKey: dberrors.ErrUniqueViolation,
+	sqlite3.ErrConstraint:           unidb.ErrIntegrConstViolation,
+	sqlite3.ErrConstraintCheck:      unidb.ErrCheckViolation,
+	sqlite3.ErrConstraintForeignKey: unidb.ErrForeignKeyViolation,
+	sqlite3.ErrConstraintUnique:     unidb.ErrUniqueViolation,
+	sqlite3.ErrConstraintNotNull:    unidb.ErrNotNullViolation,
+	sqlite3.ErrConstraintPrimaryKey: unidb.ErrUniqueViolation,
 
-	sqlite3.ErrProtocol: dberrors.ErrInvalidTransState,
+	sqlite3.ErrProtocol: unidb.ErrInvalidTransState,
 
-	sqlite3.ErrRange: dberrors.ErrInvalidSyntax,
-	sqlite3.ErrError: dberrors.ErrInvalidSyntax,
+	sqlite3.ErrRange: unidb.ErrInvalidSyntax,
+	sqlite3.ErrError: unidb.ErrInvalidSyntax,
 
-	sqlite3.ErrAuth: dberrors.ErrInvalidAuthorization,
+	sqlite3.ErrAuth: unidb.ErrInvalidAuthorization,
 
-	sqlite3.ErrPerm: dberrors.ErrInsufficientPrivilege,
+	sqlite3.ErrPerm: unidb.ErrInsufficientPrivilege,
 
-	sqlite3.ErrFull: dberrors.ErrInsufficientResources,
+	sqlite3.ErrFull: unidb.ErrInsufficientResources,
 
-	sqlite3.ErrTooBig: dberrors.ErrProgramLimitExceeded,
+	sqlite3.ErrTooBig: unidb.ErrProgramLimitExceeded,
 
-	sqlite3.ErrNoLFS: dberrors.ErrSystemError,
+	sqlite3.ErrNoLFS: unidb.ErrSystemError,
 
-	sqlite3.ErrInternal: dberrors.ErrInternalError,
+	sqlite3.ErrInternal: unidb.ErrInternalError,
 }

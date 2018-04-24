@@ -3,17 +3,17 @@ package gormconv
 import (
 	"errors"
 	"github.com/jinzhu/gorm"
-	"github.com/kucjac/go-rest-sdk/dberrors"
-	"github.com/kucjac/go-rest-sdk/dberrors/mysqlconv"
-	"github.com/kucjac/go-rest-sdk/dberrors/pgconv"
-	"github.com/kucjac/go-rest-sdk/dberrors/sqliteconv"
+	"github.com/kucjac/uni-db"
+	"github.com/kucjac/uni-db/mysqlconv"
+	"github.com/kucjac/uni-db/pgconv"
+	"github.com/kucjac/uni-db/sqliteconv"
 )
 
 // GORMConverter defines error converter for multiple databases drivers
 // used by the 'gorm' package.
 // Implements 'Converter' interface.
 type GORMConverter struct {
-	converter dberrors.Converter
+	converter unidb.Converter
 }
 
 // New creates new *GORMConverter.
@@ -29,18 +29,18 @@ func New(db *gorm.DB) (conv *GORMConverter, err error) {
 	return conv, nil
 }
 
-// Convert implements dberrors.Converter
-// Converts provided argument error into *dberrors.Error type
-func (g *GORMConverter) Convert(err error) *dberrors.Error {
+// Convert implements unidb.Converter
+// Converts provided argument error into *unidb.Error type
+func (g *GORMConverter) Convert(err error) *unidb.Error {
 	switch err {
 	case gorm.ErrCantStartTransaction, gorm.ErrInvalidTransaction:
-		return dberrors.ErrInvalidTransState.NewWithError(err)
+		return unidb.ErrInvalidTransState.NewWithError(err)
 	case gorm.ErrInvalidSQL:
-		return dberrors.ErrInvalidSyntax.NewWithError(err)
+		return unidb.ErrInvalidSyntax.NewWithError(err)
 	case gorm.ErrUnaddressable:
-		return dberrors.ErrUnspecifiedError.NewWithError(err)
+		return unidb.ErrUnspecifiedError.NewWithError(err)
 	case gorm.ErrRecordNotFound:
-		return dberrors.ErrNoResult.NewWithError(err)
+		return unidb.ErrNoResult.NewWithError(err)
 	}
 	// If error is not of gorm type
 	// use db recogniser

@@ -3,7 +3,7 @@ package sqliteconv
 import (
 	"database/sql"
 	"errors"
-	"github.com/kucjac/go-rest-sdk/dberrors"
+	"github.com/kucjac/uni-db"
 	"github.com/mattn/go-sqlite3"
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
@@ -19,7 +19,7 @@ func TestNewConverter(t *testing.T) {
 		So(len(converter.errorMap), ShouldBeGreaterThan, 0)
 
 		Convey("The SQLiteConverter implements Converter", func() {
-			So(converter, ShouldImplement, (*dberrors.Converter)(nil))
+			So(converter, ShouldImplement, (*unidb.Converter)(nil))
 		})
 	})
 }
@@ -31,34 +31,34 @@ func TestSQLiteRecogniser(t *testing.T) {
 
 		Convey("Having a list of sqlite errors", func() {
 
-			sqliteErrors := map[sqlite3.Error]dberrors.Error{
-				{Code: sqlite3.ErrWarning}:  dberrors.ErrWarning,
-				{Code: sqlite3.ErrNotFound}: dberrors.ErrNoResult,
-				{Code: sqlite3.ErrCantOpen}: dberrors.ErrConnExc,
-				{Code: sqlite3.ErrNotADB}:   dberrors.ErrConnExc,
-				{Code: sqlite3.ErrMismatch}: dberrors.ErrDataException,
+			sqliteErrors := map[sqlite3.Error]unidb.Error{
+				{Code: sqlite3.ErrWarning}:  unidb.ErrWarning,
+				{Code: sqlite3.ErrNotFound}: unidb.ErrNoResult,
+				{Code: sqlite3.ErrCantOpen}: unidb.ErrConnExc,
+				{Code: sqlite3.ErrNotADB}:   unidb.ErrConnExc,
+				{Code: sqlite3.ErrMismatch}: unidb.ErrDataException,
 				{Code: sqlite3.ErrConstraint,
-					ExtendedCode: sqlite3.ErrConstraintPrimaryKey}: dberrors.ErrUniqueViolation,
+					ExtendedCode: sqlite3.ErrConstraintPrimaryKey}: unidb.ErrUniqueViolation,
 				{Code: sqlite3.ErrConstraint,
-					ExtendedCode: sqlite3.ErrConstraintFunction}: dberrors.ErrIntegrConstViolation,
+					ExtendedCode: sqlite3.ErrConstraintFunction}: unidb.ErrIntegrConstViolation,
 				{Code: sqlite3.ErrConstraint,
-					ExtendedCode: sqlite3.ErrConstraintCheck}: dberrors.ErrCheckViolation,
+					ExtendedCode: sqlite3.ErrConstraintCheck}: unidb.ErrCheckViolation,
 				{Code: sqlite3.ErrConstraint,
-					ExtendedCode: sqlite3.ErrConstraintForeignKey}: dberrors.ErrForeignKeyViolation,
+					ExtendedCode: sqlite3.ErrConstraintForeignKey}: unidb.ErrForeignKeyViolation,
 				{Code: sqlite3.ErrConstraint,
-					ExtendedCode: sqlite3.ErrConstraintUnique}: dberrors.ErrUniqueViolation,
+					ExtendedCode: sqlite3.ErrConstraintUnique}: unidb.ErrUniqueViolation,
 				{Code: sqlite3.ErrConstraint,
-					ExtendedCode: sqlite3.ErrConstraintNotNull}: dberrors.ErrNotNullViolation,
-				{Code: sqlite3.ErrProtocol}: dberrors.ErrInvalidTransState,
-				{Code: sqlite3.ErrRange}:    dberrors.ErrInvalidSyntax,
-				{Code: sqlite3.ErrError}:    dberrors.ErrInvalidSyntax,
-				{Code: sqlite3.ErrAuth}:     dberrors.ErrInvalidAuthorization,
-				{Code: sqlite3.ErrPerm}:     dberrors.ErrInsufficientPrivilege,
-				{Code: sqlite3.ErrFull}:     dberrors.ErrInsufficientResources,
-				{Code: sqlite3.ErrTooBig}:   dberrors.ErrProgramLimitExceeded,
-				{Code: sqlite3.ErrNoLFS}:    dberrors.ErrSystemError,
-				{Code: sqlite3.ErrInternal}: dberrors.ErrInternalError,
-				{Code: sqlite3.ErrEmpty}:    dberrors.ErrUnspecifiedError,
+					ExtendedCode: sqlite3.ErrConstraintNotNull}: unidb.ErrNotNullViolation,
+				{Code: sqlite3.ErrProtocol}: unidb.ErrInvalidTransState,
+				{Code: sqlite3.ErrRange}:    unidb.ErrInvalidSyntax,
+				{Code: sqlite3.ErrError}:    unidb.ErrInvalidSyntax,
+				{Code: sqlite3.ErrAuth}:     unidb.ErrInvalidAuthorization,
+				{Code: sqlite3.ErrPerm}:     unidb.ErrInsufficientPrivilege,
+				{Code: sqlite3.ErrFull}:     unidb.ErrInsufficientResources,
+				{Code: sqlite3.ErrTooBig}:   unidb.ErrProgramLimitExceeded,
+				{Code: sqlite3.ErrNoLFS}:    unidb.ErrSystemError,
+				{Code: sqlite3.ErrInternal}: unidb.ErrInternalError,
+				{Code: sqlite3.ErrEmpty}:    unidb.ErrUnspecifiedError,
 			}
 
 			Convey("For given *sqlite.Error, specific database error should be returner.", func() {
@@ -76,17 +76,17 @@ func TestSQLiteRecogniser(t *testing.T) {
 			var err error
 			err = sql.ErrNoRows
 			recognisedErr := converter.Convert(err)
-			So(recognisedErr.Compare(dberrors.ErrNoResult), ShouldBeTrue)
+			So(recognisedErr.Compare(unidb.ErrNoResult), ShouldBeTrue)
 
 			err = sql.ErrTxDone
 			recognisedErr = converter.Convert(err)
-			So(recognisedErr.Compare(dberrors.ErrTxDone), ShouldBeTrue)
+			So(recognisedErr.Compare(unidb.ErrTxDone), ShouldBeTrue)
 		})
 
 		Convey("Having an error of different type than *sqlite3.Error and sql.Err*", func() {
 			err := errors.New("Unknown error type")
 			recognisedErr := converter.Convert(err)
-			So(recognisedErr.Compare(dberrors.ErrUnspecifiedError), ShouldBeTrue)
+			So(recognisedErr.Compare(unidb.ErrUnspecifiedError), ShouldBeTrue)
 		})
 	})
 }
