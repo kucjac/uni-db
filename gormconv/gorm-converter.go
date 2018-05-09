@@ -31,20 +31,24 @@ func New(db *gorm.DB) (conv *GORMConverter, err error) {
 
 // Convert implements unidb.Converter
 // Converts provided argument error into *unidb.Error type
-func (g *GORMConverter) Convert(err error) *unidb.Error {
+func (g *GORMConverter) Convert(err error) (dbErr *unidb.Error) {
 	switch err {
 	case gorm.ErrCantStartTransaction, gorm.ErrInvalidTransaction:
-		return unidb.ErrInvalidTransState.NewWithError(err)
+		dbErr = unidb.ErrInvalidTransState.NewWithError(err)
 	case gorm.ErrInvalidSQL:
-		return unidb.ErrInvalidSyntax.NewWithError(err)
+		dbErr = unidb.ErrInvalidSyntax.NewWithError(err)
 	case gorm.ErrUnaddressable:
-		return unidb.ErrUnspecifiedError.NewWithError(err)
+		dbErr = unidb.ErrUnspecifiedError.NewWithError(err)
 	case gorm.ErrRecordNotFound:
-		return unidb.ErrNoResult.NewWithError(err)
+		dbErr = unidb.ErrNoResult.NewWithError(err)
 	}
+	if dbErr == nil {
+		dbErr = g.converter.Convert(err)
+	}
+	dbErr.Message = err.Error()
 	// If error is not of gorm type
 	// use db recogniser
-	return g.converter.Convert(err)
+	return dbErr
 }
 
 // initialize provides initialization process of the GORMConverter
