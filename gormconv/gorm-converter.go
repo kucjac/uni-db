@@ -6,7 +6,6 @@ import (
 	"github.com/kucjac/uni-db"
 	"github.com/kucjac/uni-db/mysqlconv"
 	"github.com/kucjac/uni-db/pgconv"
-	"github.com/kucjac/uni-db/sqliteconv"
 )
 
 // GORMConverter defines error converter for multiple databases drivers
@@ -64,7 +63,7 @@ func (g *GORMConverter) initialize(db *gorm.DB) error {
 	case "mysql":
 		g.converter = mysqlconv.New()
 	case "sqlite3":
-		g.converter = sqliteconv.New()
+		g.converter = AnyConverter{}
 	default:
 		return errors.New("Unsupported database dialect.")
 	}
