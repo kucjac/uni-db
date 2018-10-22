@@ -2,17 +2,35 @@ package gormconv
 
 import (
 	"errors"
+	"fmt"
 	"github.com/jinzhu/gorm"
 	"github.com/kucjac/uni-db"
-	"github.com/kucjac/uni-db/mysqlconv"
-	"github.com/kucjac/uni-db/pgconv"
+	"sync"
 )
+
+var (
+	converters map[string]unidb.Converter
+	dialectMu  sync.Locker = &sync.Mutex{}
+)
+
+func Register(name string, converter unidb.Converter) {
+	dialectMu.Lock()
+	defer dialectMu.Unlock()
+	if converter == nil {
+		panic("gorm-converter: Register converter is nil")
+	}
+	if _, dup := converters[name]; dup {
+		panic("gorm-converter: Register called twice for converter " + name)
+	}
+
+	converters[name] = converter
+}
 
 // GORMConverter defines error converter for multiple databases drivers
 // used by the 'gorm' package.
 // Implements 'Converter' interface.
 type GORMConverter struct {
-	converter unidb.Converter
+	dialect string
 }
 
 // New creates new *GORMConverter.
@@ -25,6 +43,7 @@ func New(db *gorm.DB) (conv *GORMConverter, err error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return conv, nil
 }
 
@@ -41,8 +60,9 @@ func (g *GORMConverter) Convert(err error) (dbErr *unidb.Error) {
 	case gorm.ErrRecordNotFound:
 		dbErr = unidb.ErrNoResult.NewWithError(err)
 	}
+
 	if dbErr == nil {
-		dbErr = g.converter.Convert(err)
+		dbErr = converters[g.dialect].Convert(err)
 	}
 	dbErr.Message = err.Error()
 	// If error is not of gorm type
@@ -56,16 +76,11 @@ func (g *GORMConverter) initialize(db *gorm.DB) error {
 	if db == nil {
 		return errors.New("Nil pointer provided")
 	}
-	dialect := db.Dialect()
-	switch dialect.GetName() {
-	case "postgres":
-		g.converter = pgconv.New()
-	case "mysql":
-		g.converter = mysqlconv.New()
-	case "sqlite3":
-		g.converter = AnyConverter{}
-	default:
-		return errors.New("Unsupported database dialect.")
+	dialect := db.Dialect().GetName()
+
+	if _, exists := converters[dialect]; !exists {
+		return fmt.Errorf("No converter found for dialect: %s", dialect)
 	}
+
 	return nil
 }
