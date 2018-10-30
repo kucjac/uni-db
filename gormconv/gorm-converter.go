@@ -13,6 +13,10 @@ var (
 	dialectMu  sync.Locker = &sync.Mutex{}
 )
 
+func init() {
+	converters = map[string]unidb.Converter{}
+}
+
 func Register(name string, converter unidb.Converter) {
 	dialectMu.Lock()
 	defer dialectMu.Unlock()
@@ -76,10 +80,10 @@ func (g *GORMConverter) initialize(db *gorm.DB) error {
 	if db == nil {
 		return errors.New("Nil pointer provided")
 	}
-	dialect := db.Dialect().GetName()
+	g.dialect = db.Dialect().GetName()
 
-	if _, exists := converters[dialect]; !exists {
-		return fmt.Errorf("No converter found for dialect: %s", dialect)
+	if _, exists := converters[g.dialect]; !exists {
+		return fmt.Errorf("No converter found for dialect: %s", g.dialect)
 	}
 
 	return nil
