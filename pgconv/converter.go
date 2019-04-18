@@ -2,6 +2,7 @@ package pgconv
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/kucjac/uni-db"
 	"github.com/lib/pq"
 )
@@ -33,6 +34,9 @@ func (p *PGConverter) Convert(err error) (dberrorsErr *unidb.Error) {
 
 	// Error prototype
 	var dbErrorProto unidb.Error
+
+	fmt.Printf("PgError: %#v\n", pgError)
+	fmt.Printf("Converter: %#v\n", p)
 
 	// First check if recogniser has entire error code in it
 	dbErrorProto, ok = p.errorMap[pgError.Code]

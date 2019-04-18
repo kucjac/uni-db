@@ -1,10 +1,9 @@
 package gormconv
 
 import (
-	"errors"
 	"fmt"
-	"github.com/jinzhu/gorm"
 	"github.com/kucjac/uni-db"
+	"github.com/neuronlabs/gorm"
 	"sync"
 )
 
@@ -17,6 +16,7 @@ func init() {
 	converters = map[string]unidb.Converter{}
 }
 
+// Register registers the gorm converter
 func Register(name string, converter unidb.Converter) {
 	dialectMu.Lock()
 	defer dialectMu.Unlock()
@@ -41,9 +41,9 @@ type GORMConverter struct {
 // On the base of the *gorm.DB argument it recognise given gorm.Dialect
 // on the base of the dialect the function recognise the appropiate error converter.
 // returns error if the nil pointer provided or unsupported db.Dialect
-func New(db *gorm.DB) (conv *GORMConverter, err error) {
+func New(dialectName string) (conv *GORMConverter, err error) {
 	conv = &GORMConverter{}
-	err = conv.initialize(db)
+	err = conv.initialize(dialectName)
 	if err != nil {
 		return nil, err
 	}
@@ -76,11 +76,8 @@ func (g *GORMConverter) Convert(err error) (dbErr *unidb.Error) {
 
 // initialize provides initialization process of the GORMConverter
 // returns error if nil pointer provided or unsupported database dialect.
-func (g *GORMConverter) initialize(db *gorm.DB) error {
-	if db == nil {
-		return errors.New("Nil pointer provided")
-	}
-	g.dialect = db.Dialect().GetName()
+func (g *GORMConverter) initialize(dialectName string) error {
+	g.dialect = dialectName
 
 	if _, exists := converters[g.dialect]; !exists {
 		return fmt.Errorf("No converter found for dialect: %s", g.dialect)
