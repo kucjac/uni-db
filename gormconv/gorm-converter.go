@@ -2,8 +2,8 @@ package gormconv
 
 import (
 	"fmt"
-	"github.com/kucjac/uni-db"
-	"github.com/neuronlabs/gorm"
+	"github.com/jinzhu/gorm"
+	"github.com/neuronlabs/uni-db"
 	"sync"
 )
 
@@ -56,7 +56,7 @@ func New(dialectName string) (conv *GORMConverter, err error) {
 func (g *GORMConverter) Convert(err error) (dbErr *unidb.Error) {
 	switch err {
 	case gorm.ErrCantStartTransaction, gorm.ErrInvalidTransaction:
-		dbErr = unidb.ErrInvalidTransState.NewWithError(err)
+		dbErr = unidb.ErrTxState.NewWithError(err)
 	case gorm.ErrInvalidSQL:
 		dbErr = unidb.ErrInvalidSyntax.NewWithError(err)
 	case gorm.ErrUnaddressable:

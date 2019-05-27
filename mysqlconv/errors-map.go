@@ -1,25 +1,25 @@
 package mysqlconv
 
 import (
-	"github.com/kucjac/uni-db"
+	"github.com/neuronlabs/uni-db"
 )
 
 var mysqlErrMap = map[interface{}]unidb.Error{
-	"08": unidb.ErrConnExc,
+	"08": unidb.ErrConnection,
 	"22": unidb.ErrDataException,
-	"25": unidb.ErrInvalidTransState,
+	"25": unidb.ErrTxState,
 	"42": unidb.ErrInvalidSyntax,
-	"XA": unidb.ErrInvalidTransState,
+	"XA": unidb.ErrTxState,
 
-	"08S01": unidb.ErrConnExc,
-	"08001": unidb.ErrConnExc,
+	"08S01": unidb.ErrConnection,
+	"08001": unidb.ErrConnection,
 	"21000": unidb.ErrCardinalityViolation,
 
 	"22000": unidb.ErrDataException,
 	"22007": unidb.ErrDataException,
-	"23000": unidb.ErrIntegrConstViolation,
-	"25000": unidb.ErrInvalidTransState,
-	"28000": unidb.ErrInvalidAuthorization,
+	"23000": unidb.ErrIntegrityConstraintViolation,
+	"25000": unidb.ErrTxState,
+	"28000": unidb.ErrAuthorizationFailed,
 
 	"42000": unidb.ErrInvalidSyntax,
 	"44000": unidb.ErrCheckViolation,
@@ -32,23 +32,23 @@ var mysqlErrMap = map[interface{}]unidb.Error{
 	uint16(1062): unidb.ErrUniqueViolation,
 	uint16(1114): unidb.ErrProgramLimitExceeded,
 	uint16(1118): unidb.ErrProgramLimitExceeded,
-	uint16(1130): unidb.ErrInvalidAuthorization,
-	uint16(1131): unidb.ErrInvalidAuthorization,
-	uint16(1132): unidb.ErrInvalidPassword,
-	uint16(1133): unidb.ErrInvalidPassword,
+	uint16(1130): unidb.ErrAuthorizationFailed,
+	uint16(1131): unidb.ErrAuthorizationFailed,
+	uint16(1132): unidb.ErrAuthenticationFailed,
+	uint16(1133): unidb.ErrAuthenticationFailed,
 	uint16(1169): unidb.ErrUniqueViolation,
-	uint16(1182): unidb.ErrTransRollback,
+	uint16(1182): unidb.ErrTxRollback,
 	uint16(1216): unidb.ErrForeignKeyViolation,
 	uint16(1217): unidb.ErrForeignKeyViolation,
 	uint16(1227): unidb.ErrInsufficientPrivilege,
-	uint16(1251): unidb.ErrInvalidAuthorization,
-	uint16(1400): unidb.ErrInvalidTransState,
+	uint16(1251): unidb.ErrAuthorizationFailed,
+	uint16(1400): unidb.ErrTxState,
 	uint16(1401): unidb.ErrInternalError,
 	uint16(1451): unidb.ErrForeignKeyViolation,
 	uint16(1452): unidb.ErrForeignKeyViolation,
 	uint16(1557): unidb.ErrUniqueViolation,
 	uint16(1568): unidb.ErrUniqueViolation,
-	uint16(1698): unidb.ErrInvalidPassword,
+	uint16(1698): unidb.ErrAuthenticationFailed,
 }
 
 var codeSQLState = map[uint16]string{

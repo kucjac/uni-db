@@ -1,9 +1,9 @@
 package mysql
 
 import (
-	"github.com/kucjac/uni-db/gormconv"
-	"github.com/kucjac/uni-db/mysqlconv"
-	_ "github.com/neuronlabs/gorm/dialects/mysql"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/neuronlabs/uni-db/gormconv"
+	"github.com/neuronlabs/uni-db/mysqlconv"
 )
 
 func init() {

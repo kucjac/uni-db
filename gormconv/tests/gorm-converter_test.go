@@ -3,12 +3,12 @@ package gormconv
 import (
 	"database/sql"
 	"errors"
-	"github.com/kucjac/uni-db"
-	"github.com/kucjac/uni-db/gormconv"
-	_ "github.com/kucjac/uni-db/gormconv/dialects/mysql"
-	_ "github.com/kucjac/uni-db/gormconv/dialects/postgres"
-	_ "github.com/kucjac/uni-db/gormconv/dialects/sqlite"
-	"github.com/neuronlabs/gorm"
+	"github.com/jinzhu/gorm"
+	"github.com/neuronlabs/uni-db"
+	"github.com/neuronlabs/uni-db/gormconv"
+	_ "github.com/neuronlabs/uni-db/gormconv/dialects/mysql"
+	_ "github.com/neuronlabs/uni-db/gormconv/dialects/postgres"
+	_ "github.com/neuronlabs/uni-db/gormconv/dialects/sqlite"
 	. "github.com/smartystreets/goconvey/convey"
 
 	"testing"

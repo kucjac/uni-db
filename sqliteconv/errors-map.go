@@ -1,8 +1,8 @@
 package sqliteconv
 
 import (
-	"github.com/kucjac/uni-db"
 	"github.com/mattn/go-sqlite3"
+	"github.com/neuronlabs/uni-db"
 )
 
 var defaultSQLiteErrorMap map[interface{}]unidb.Error = map[interface{}]unidb.Error{
@@ -10,24 +10,24 @@ var defaultSQLiteErrorMap map[interface{}]unidb.Error = map[interface{}]unidb.Er
 
 	sqlite3.ErrNotFound: unidb.ErrNoResult,
 
-	sqlite3.ErrCantOpen: unidb.ErrConnExc,
-	sqlite3.ErrNotADB:   unidb.ErrConnExc,
+	sqlite3.ErrCantOpen: unidb.ErrConnection,
+	sqlite3.ErrNotADB:   unidb.ErrConnection,
 
 	sqlite3.ErrMismatch: unidb.ErrDataException,
 
-	sqlite3.ErrConstraint:           unidb.ErrIntegrConstViolation,
+	sqlite3.ErrConstraint:           unidb.ErrIntegrityConstraintViolation,
 	sqlite3.ErrConstraintCheck:      unidb.ErrCheckViolation,
 	sqlite3.ErrConstraintForeignKey: unidb.ErrForeignKeyViolation,
 	sqlite3.ErrConstraintUnique:     unidb.ErrUniqueViolation,
 	sqlite3.ErrConstraintNotNull:    unidb.ErrNotNullViolation,
 	sqlite3.ErrConstraintPrimaryKey: unidb.ErrUniqueViolation,
 
-	sqlite3.ErrProtocol: unidb.ErrInvalidTransState,
+	sqlite3.ErrProtocol: unidb.ErrTxState,
 
 	sqlite3.ErrRange: unidb.ErrInvalidSyntax,
 	sqlite3.ErrError: unidb.ErrInvalidSyntax,
 
-	sqlite3.ErrAuth: unidb.ErrInvalidAuthorization,
+	sqlite3.ErrAuth: unidb.ErrAuthorizationFailed,
 
 	sqlite3.ErrPerm: unidb.ErrInsufficientPrivilege,
 

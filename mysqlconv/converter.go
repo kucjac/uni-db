@@ -3,7 +3,7 @@ package mysqlconv
 import (
 	"database/sql"
 	"github.com/go-sql-driver/mysql"
-	"github.com/kucjac/uni-db"
+	"github.com/neuronlabs/uni-db"
 )
 
 // MySQLConverter is a Converter interface implementation
@@ -37,7 +37,7 @@ func (m *MySQLConverter) Convert(err error) *unidb.Error {
 		switch err {
 		case mysql.ErrInvalidConn, mysql.ErrNoTLS, mysql.ErrOldProtocol,
 			mysql.ErrMalformPkt:
-			return unidb.ErrConnExc.NewWithError(err)
+			return unidb.ErrConnection.NewWithError(err)
 		case sql.ErrNoRows:
 			return unidb.ErrNoResult.NewWithError(err)
 

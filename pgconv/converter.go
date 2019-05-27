@@ -3,8 +3,8 @@ package pgconv
 import (
 	"database/sql"
 	"fmt"
-	"github.com/kucjac/uni-db"
 	"github.com/lib/pq"
+	"github.com/neuronlabs/uni-db"
 )
 
 // PGConverter is an implementation of dberrorsrrors.Converter.

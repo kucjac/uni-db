@@ -1,8 +1,8 @@
 package pgconv
 
 import (
-	"github.com/kucjac/uni-db"
 	"github.com/lib/pq"
+	"github.com/neuronlabs/uni-db"
 )
 
 var defaultPGErrorMap = map[interface{}]unidb.Error{
@@ -15,7 +15,7 @@ var defaultPGErrorMap = map[interface{}]unidb.Error{
 	pq.ErrorCode("P0002"): unidb.ErrNoResult,
 
 	// Class 08 - Connection Exception
-	pq.ErrorClass("08"): unidb.ErrConnExc,
+	pq.ErrorClass("08"): unidb.ErrConnection,
 
 	// Class 21 - Cardinality Violation
 	pq.ErrorClass("21"): unidb.ErrCardinalityViolation,
@@ -24,8 +24,8 @@ var defaultPGErrorMap = map[interface{}]unidb.Error{
 	pq.ErrorClass("22"): unidb.ErrDataException,
 
 	// Class 23 Integrity Violation errors
-	pq.ErrorClass("23"):   unidb.ErrIntegrConstViolation,
-	pq.ErrorCode("23000"): unidb.ErrIntegrConstViolation,
+	pq.ErrorClass("23"):   unidb.ErrIntegrityConstraintViolation,
+	pq.ErrorCode("23000"): unidb.ErrIntegrityConstraintViolation,
 	pq.ErrorCode("23001"): unidb.ErrRestrictViolation,
 	pq.ErrorCode("23502"): unidb.ErrNotNullViolation,
 	pq.ErrorCode("23503"): unidb.ErrForeignKeyViolation,
@@ -33,20 +33,20 @@ var defaultPGErrorMap = map[interface{}]unidb.Error{
 	pq.ErrorCode("23514"): unidb.ErrCheckViolation,
 
 	// Class 25 Invalid Transaction State
-	pq.ErrorClass("25"): unidb.ErrInvalidTransState,
+	pq.ErrorClass("25"): unidb.ErrTxState,
 
 	// Class 28 Invalid Authorization Specification
-	pq.ErrorCode("28000"): unidb.ErrInvalidAuthorization,
-	pq.ErrorCode("28P01"): unidb.ErrInvalidPassword,
+	pq.ErrorCode("28000"): unidb.ErrAuthorizationFailed,
+	pq.ErrorCode("28P01"): unidb.ErrAuthenticationFailed,
 
 	// Class 2D Invalid Transaction Termination
-	pq.ErrorCode("2D000"): unidb.ErrInvalidTransTerm,
+	pq.ErrorCode("2D000"): unidb.ErrTxTermination,
 
 	// Class 3F Invalid Schema Name
 	pq.ErrorCode("3F000"): unidb.ErrInvalidSchemaName,
 
 	// Class 40 - Transaciton Rollback
-	pq.ErrorClass("40"): unidb.ErrTransRollback,
+	pq.ErrorClass("40"): unidb.ErrTxRollback,
 
 	// Class 42 - Invalid Syntax
 	pq.ErrorClass("42"):   unidb.ErrInvalidSyntax,

@@ -1,7 +1,7 @@
 package gormconv
 
 import (
-	"github.com/kucjac/uni-db"
+	"github.com/neuronlabs/uni-db"
 )
 
 type AnyConverter struct{}

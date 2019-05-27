@@ -3,7 +3,7 @@ package mysqlconv
 import (
 	"database/sql"
 	"github.com/go-sql-driver/mysql"
-	"github.com/kucjac/uni-db"
+	"github.com/neuronlabs/uni-db"
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
 )
@@ -38,26 +38,26 @@ func TestMySQLRecogniser(t *testing.T) {
 				{Number: 1114}: unidb.ErrProgramLimitExceeded,
 				{Number: 1118}: unidb.ErrProgramLimitExceeded,
 				{Number: 1129}: unidb.ErrInternalError,
-				{Number: 1130}: unidb.ErrInvalidAuthorization,
-				{Number: 1131}: unidb.ErrInvalidAuthorization,
-				{Number: 1132}: unidb.ErrInvalidPassword,
-				{Number: 1133}: unidb.ErrInvalidPassword,
+				{Number: 1130}: unidb.ErrAuthorizationFailed,
+				{Number: 1131}: unidb.ErrAuthorizationFailed,
+				{Number: 1132}: unidb.ErrAuthenticationFailed,
+				{Number: 1133}: unidb.ErrAuthenticationFailed,
 				{Number: 1169}: unidb.ErrUniqueViolation,
-				{Number: 1182}: unidb.ErrTransRollback,
+				{Number: 1182}: unidb.ErrTxRollback,
 				{Number: 1216}: unidb.ErrForeignKeyViolation,
 				{Number: 1217}: unidb.ErrForeignKeyViolation,
 				{Number: 1227}: unidb.ErrInsufficientPrivilege,
-				{Number: 1251}: unidb.ErrInvalidAuthorization,
-				{Number: 1400}: unidb.ErrInvalidTransState,
+				{Number: 1251}: unidb.ErrAuthorizationFailed,
+				{Number: 1400}: unidb.ErrTxState,
 				{Number: 1401}: unidb.ErrInternalError,
 				{Number: 1451}: unidb.ErrForeignKeyViolation,
 				{Number: 1452}: unidb.ErrForeignKeyViolation,
 				{Number: 1557}: unidb.ErrUniqueViolation,
 				{Number: 1568}: unidb.ErrUniqueViolation,
-				{Number: 1698}: unidb.ErrInvalidPassword,
+				{Number: 1698}: unidb.ErrAuthenticationFailed,
 				//Nil
 				{Number: 1317}: unidb.ErrUnspecifiedError,
-				{Number: 1040}: unidb.ErrConnExc,
+				{Number: 1040}: unidb.ErrConnection,
 				//Non mapped number
 				{Number: 1000}: unidb.ErrUnspecifiedError,
 			}
@@ -72,10 +72,10 @@ func TestMySQLRecogniser(t *testing.T) {
 			errorMap := map[error]unidb.Error{
 				sql.ErrNoRows:           unidb.ErrNoResult,
 				sql.ErrTxDone:           unidb.ErrTxDone,
-				mysql.ErrInvalidConn:    unidb.ErrConnExc,
-				mysql.ErrNoTLS:          unidb.ErrConnExc,
-				mysql.ErrMalformPkt:     unidb.ErrConnExc,
-				mysql.ErrOldProtocol:    unidb.ErrConnExc,
+				mysql.ErrInvalidConn:    unidb.ErrConnection,
+				mysql.ErrNoTLS:          unidb.ErrConnection,
+				mysql.ErrMalformPkt:     unidb.ErrConnection,
+				mysql.ErrOldProtocol:    unidb.ErrConnection,
 				mysql.ErrNativePassword: unidb.ErrUnspecifiedError,
 			}
 

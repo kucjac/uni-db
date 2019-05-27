@@ -3,8 +3,8 @@ package sqliteconv
 import (
 	"database/sql"
 	"errors"
-	"github.com/kucjac/uni-db"
 	"github.com/mattn/go-sqlite3"
+	"github.com/neuronlabs/uni-db"
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
 )
@@ -34,13 +34,13 @@ func TestSQLiteRecogniser(t *testing.T) {
 			sqliteErrors := map[sqlite3.Error]unidb.Error{
 				{Code: sqlite3.ErrWarning}:  unidb.ErrWarning,
 				{Code: sqlite3.ErrNotFound}: unidb.ErrNoResult,
-				{Code: sqlite3.ErrCantOpen}: unidb.ErrConnExc,
-				{Code: sqlite3.ErrNotADB}:   unidb.ErrConnExc,
+				{Code: sqlite3.ErrCantOpen}: unidb.ErrConnection,
+				{Code: sqlite3.ErrNotADB}:   unidb.ErrConnection,
 				{Code: sqlite3.ErrMismatch}: unidb.ErrDataException,
 				{Code: sqlite3.ErrConstraint,
 					ExtendedCode: sqlite3.ErrConstraintPrimaryKey}: unidb.ErrUniqueViolation,
 				{Code: sqlite3.ErrConstraint,
-					ExtendedCode: sqlite3.ErrConstraintFunction}: unidb.ErrIntegrConstViolation,
+					ExtendedCode: sqlite3.ErrConstraintFunction}: unidb.ErrIntegrityConstraintViolation,
 				{Code: sqlite3.ErrConstraint,
 					ExtendedCode: sqlite3.ErrConstraintCheck}: unidb.ErrCheckViolation,
 				{Code: sqlite3.ErrConstraint,
@@ -49,10 +49,10 @@ func TestSQLiteRecogniser(t *testing.T) {
 					ExtendedCode: sqlite3.ErrConstraintUnique}: unidb.ErrUniqueViolation,
 				{Code: sqlite3.ErrConstraint,
 					ExtendedCode: sqlite3.ErrConstraintNotNull}: unidb.ErrNotNullViolation,
-				{Code: sqlite3.ErrProtocol}: unidb.ErrInvalidTransState,
+				{Code: sqlite3.ErrProtocol}: unidb.ErrTxState,
 				{Code: sqlite3.ErrRange}:    unidb.ErrInvalidSyntax,
 				{Code: sqlite3.ErrError}:    unidb.ErrInvalidSyntax,
-				{Code: sqlite3.ErrAuth}:     unidb.ErrInvalidAuthorization,
+				{Code: sqlite3.ErrAuth}:     unidb.ErrAuthorizationFailed,
 				{Code: sqlite3.ErrPerm}:     unidb.ErrInsufficientPrivilege,
 				{Code: sqlite3.ErrFull}:     unidb.ErrInsufficientResources,
 				{Code: sqlite3.ErrTooBig}:   unidb.ErrProgramLimitExceeded,

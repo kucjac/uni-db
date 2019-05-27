@@ -3,8 +3,8 @@ package pgconv
 import (
 	"database/sql"
 	"errors"
-	"github.com/kucjac/uni-db"
 	"github.com/lib/pq"
+	"github.com/neuronlabs/uni-db"
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
 )
@@ -29,22 +29,22 @@ func TestPGRecogniser(t *testing.T) {
 				{Code: pq.ErrorCode("01007")}: unidb.ErrWarning,
 				{Code: pq.ErrorCode("02000")}: unidb.ErrNoResult,
 				{Code: pq.ErrorCode("P0002")}: unidb.ErrNoResult,
-				{Code: pq.ErrorCode("08006")}: unidb.ErrConnExc,
+				{Code: pq.ErrorCode("08006")}: unidb.ErrConnection,
 				{Code: pq.ErrorCode("21000")}: unidb.ErrCardinalityViolation,
 				{Code: pq.ErrorCode("22012")}: unidb.ErrDataException,
-				{Code: pq.ErrorCode("23000")}: unidb.ErrIntegrConstViolation,
+				{Code: pq.ErrorCode("23000")}: unidb.ErrIntegrityConstraintViolation,
 				{Code: pq.ErrorCode("23001")}: unidb.ErrRestrictViolation,
 				{Code: pq.ErrorCode("23502")}: unidb.ErrNotNullViolation,
 				{Code: pq.ErrorCode("23503")}: unidb.ErrForeignKeyViolation,
 				{Code: pq.ErrorCode("23505")}: unidb.ErrUniqueViolation,
 				{Code: pq.ErrorCode("23514")}: unidb.ErrCheckViolation,
-				{Code: pq.ErrorCode("25001")}: unidb.ErrInvalidTransState,
-				{Code: pq.ErrorCode("25004")}: unidb.ErrInvalidTransState,
-				{Code: pq.ErrorCode("28000")}: unidb.ErrInvalidAuthorization,
-				{Code: pq.ErrorCode("28P01")}: unidb.ErrInvalidPassword,
-				{Code: pq.ErrorCode("2D000")}: unidb.ErrInvalidTransTerm,
+				{Code: pq.ErrorCode("25001")}: unidb.ErrTxState,
+				{Code: pq.ErrorCode("25004")}: unidb.ErrTxState,
+				{Code: pq.ErrorCode("28000")}: unidb.ErrAuthorizationFailed,
+				{Code: pq.ErrorCode("28P01")}: unidb.ErrAuthenticationFailed,
+				{Code: pq.ErrorCode("2D000")}: unidb.ErrTxTermination,
 				{Code: pq.ErrorCode("3F000")}: unidb.ErrInvalidSchemaName,
-				{Code: pq.ErrorCode("40000")}: unidb.ErrTransRollback,
+				{Code: pq.ErrorCode("40000")}: unidb.ErrTxRollback,
 				{Code: pq.ErrorCode("42P06")}: unidb.ErrInvalidSyntax,
 				{Code: pq.ErrorCode("42501")}: unidb.ErrInsufficientPrivilege,
 				{Code: pq.ErrorCode("53100")}: unidb.ErrInsufficientResources,

@@ -1,9 +1,9 @@
 package postgres
 
 import (
-	"github.com/kucjac/uni-db/gormconv"
-	"github.com/kucjac/uni-db/pgconv"
-	_ "github.com/neuronlabs/gorm/dialects/postgres"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"github.com/neuronlabs/uni-db/gormconv"
+	"github.com/neuronlabs/uni-db/pgconv"
 )
 
 func init() {

@@ -2,8 +2,8 @@ package sqliteconv
 
 import (
 	"database/sql"
-	"github.com/kucjac/uni-db"
 	"github.com/mattn/go-sqlite3"
+	"github.com/neuronlabs/uni-db"
 )
 
 // SQLiteConverter is ErrorConverter interface implementation
