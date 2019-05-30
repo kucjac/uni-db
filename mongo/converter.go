@@ -3,6 +3,8 @@ package mongo
 import (
 	"github.com/neuronlabs/uni-db"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/x/mongo/driver/auth"
+	"go.mongodb.org/mongo-driver/x/mongo/driver/topology"
 	"strings"
 )
 
@@ -37,6 +39,16 @@ func (e *ErrorConverter) Convert(err error) *unidb.Error {
 		if ok {
 			outError = pr.NewWithMessage(et.Message)
 		}
+	case topology.ConnectionError:
+		if et.Wrapped != nil {
+			switch we := et.Wrapped.(type) {
+			case *auth.Error:
+				outError = unidb.ErrAuthenticationFailed.NewWithMessage(we.Message())
+			}
+		} else {
+			outError = unidb.ErrConnection.NewWithMessage(et.ConnectionID)
+		}
+
 	case *mongo.WriteError:
 		pr, ok := e.mapping[int32(et.Code)]
 		if ok {
